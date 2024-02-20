@@ -1,0 +1,36 @@
+name: Data Synchronization
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/30 * * * *"
+concurrency:
+  group: data_synchronization
+
+jobs:
+  data_synchronization:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Checkout data
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          ref: gh-pages
+          path: ./data
+
+      - name: Create Test File
+        run: date > ./data/generated.txt
+
+      - name: Upload
+        uses: JamesIves/github-pages-deploy-action@releases/v4
+        with:
+          branch: gh-pages
+          folder: ./data
+          clean: true
+          single-commit: true
+          git-config-name: scioly-gatech-bot
+          git-config-email: scioly-gatech-bot@users.noreply.github.com
