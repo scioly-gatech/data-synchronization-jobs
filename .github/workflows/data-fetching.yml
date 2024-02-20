@@ -2,7 +2,7 @@ name: Data Synchronization
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "* 8 * * *"
 concurrency:
   group: data_synchronization
 
@@ -22,8 +22,20 @@ jobs:
           ref: gh-pages
           path: ./data
 
-      - name: Create Test File
-        run: date > ./data/generated.txt
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Dependencies
+        run: |
+          npm ci
+
+      - name: Download Announcement HTML File
+        run: |
+          npm start
+        env:
+          DRIVE_API_KEY: ${{ secrets.DRIVE_API_KEY }}
 
       - name: Upload
         uses: JamesIves/github-pages-deploy-action@releases/v4
