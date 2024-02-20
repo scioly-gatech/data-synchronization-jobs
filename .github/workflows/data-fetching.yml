@@ -2,7 +2,7 @@ name: Data Synchronization
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "* 8 * * *"
 concurrency:
   group: data_synchronization
 
