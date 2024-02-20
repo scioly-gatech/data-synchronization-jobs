@@ -1,0 +1,5 @@
+# ignore locally installed dependences
+node_modules
+
+# ignore generated data files
+data
