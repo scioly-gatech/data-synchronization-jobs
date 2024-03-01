@@ -1,8 +1,0 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
-outputs:
-  time: # id of output
-    description: 'The time when data was fetched'
-runs:
-  using: 'node20'
-  main: 'index.js'
