@@ -1,0 +1,48 @@
+name: Announcements Synchronization
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "* 8 * * *"
+concurrency:
+  group: announcements_synchronization
+
+jobs:
+  data_synchronization:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Checkout data
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          ref: gh-pages
+          path: ./data
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Dependencies
+        run: |
+          npm ci
+
+      - name: Download Announcement HTMLand JSON File
+        run: |
+          npx ts-node sync-announcements-index.ts
+        env:
+          DRIVE_API_KEY: ${{ secrets.DRIVE_API_KEY }}
+
+      - name: Upload
+        uses: JamesIves/github-pages-deploy-action@releases/v4
+        with:
+          branch: gh-pages
+          folder: ./data
+          clean: true
+          single-commit: true
+          git-config-name: scioly-gatech-bot
+          git-config-email: scioly-gatech-bot@users.noreply.github.com

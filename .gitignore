@@ -3,3 +3,6 @@ node_modules
 
 # ignore generated data files
 data
+
+# ignore credential files
+*\credentials.json
